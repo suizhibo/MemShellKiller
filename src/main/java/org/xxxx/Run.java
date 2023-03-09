@@ -10,7 +10,6 @@ public class Run {
             return;
         String agentPath = args[0];
 //        System.out.print(agentPath);
-//        String agentPath = "D:\\Users\\Sangfor\\Desktop\\专项工具开发\\内存码注入\\环境\\javaAgent\\target";
         try {
 //            File toolsJar = new File(System.getProperty("java.home").replaceFirst("jre", "lib") + File.separator + "tools.jar");
 //            System.out.print(toolsJar.toURI());
