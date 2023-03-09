@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>MemShellKiller</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <build>
+        <!-- Configuration about JavaFX-->
+        <resources>
+            <!--            <resource>-->
+            <!--                <directory>src/main/java</directory>-->
+            <!--                <includes>-->
+            <!--                    <include>**/*.*</include>-->
+            <!--                </includes>-->
+            <!--            </resource>-->
+            <resource>
+                <!--将fxml文件放在src/main/resources-->
+                <directory>src/main/resources</directory>
+                <includes>
+                    <!--需要显示的资源需要在这里设置过滤-->
+                    <include>**/*.*</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.fxml</include>
+                    <include>**/*.class</include>
+                    <include>**/fxml/*.fxml</include>
+                    <include>**/template/*.class</include>
+                    <!--                    <include>**/css/*.css</include>-->
+                    <!--                    <include>**/file/*.png</include>-->
+                    <!--                    <include>**/file/*.jpg</include>-->
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
