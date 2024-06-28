@@ -67,11 +67,11 @@ public class ScanTransformer extends TransformerBase implements ClassFileTransfo
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         String clazzName = className.replace("/", ".");
-        classfileBuffer = Cache.classByteCache.get(clazzName);
-        if(classfileBuffer != null){
-            return classfileBuffer;
+        byte[] classfileBuffer1 = Cache.classByteCache.get(clazzName);
+        if(classfileBuffer1 != null){
+            return classfileBuffer1;
         }
-        return null;
+        return classfileBuffer;
     }
 
     @Override

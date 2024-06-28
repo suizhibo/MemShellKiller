@@ -5,6 +5,7 @@ import org.xxxx.core.killer.KillerBase;
 import org.xxxx.core.killer.NormalKiller;
 import org.xxxx.core.killer.TransformKiller;
 import org.xxxx.utils.Cache;
+import org.xxxx.utils.CheckStruct;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -18,36 +19,35 @@ import java.util.Set;
 public class KillerTransformer extends TransformerBase implements ClassFileTransformer {
     private Instrumentation instrumentation;
     private String className;
-    private String type;
-    private String subClasses;
     private List<KillerBase> killTransformers;
     private List<String> classesName;
     static boolean isFirst = false;
 
     // 当要对普通型内存马进行操作时，要提供其类型（filter\servlet\listener）
-    public KillerTransformer(Instrumentation instrumentation, String className, String type, String subClasses) {
+    public KillerTransformer(Instrumentation instrumentation, String className) {
         this.instrumentation = instrumentation;
         this.className = className;
-        this.type = type;
-        this.subClasses = subClasses;
         this.killTransformers = new ArrayList<KillerBase>();
         this.instrumentation.addTransformer(this, true);
-        this.installTransform();
 
     }
 
-    public void installTransform(){
-        if(this.type != null && this.type.equals("transform")){
-            KillerBase killTransformersTransform = new TransformKiller();
-            this.killTransformers.add(killTransformersTransform);
-        } else if(this.type != null && this.type.equals("agent")){
-            KillerBase killAgentTransform = new AgentKiller();
-            this.killTransformers.add(killAgentTransform);
-        }else if(this.type != null && this.type.equals("normal")){
-            KillerBase killNormalTransform = new NormalKiller(this.subClasses);
-            this.killTransformers.add(killNormalTransform);
+
+    protected KillerBase getKillerByClassName(String className){
+        String killerType = (String) CheckStruct.get(className, "killType");
+        if(killerType != null){
+            if(killerType.equals("transformer")){
+                return  new TransformKiller();
+            } else if(killerType.equals("agent")){
+                return new AgentKiller();
+            }else if(killerType.equals("normal")){
+                String subClasses = (String) CheckStruct.get(className, "type");
+                return new NormalKiller(subClasses);
+            }
         }
+        return null;
     }
+
 
     @Override
     public void retransform() throws Throwable {
@@ -90,15 +90,11 @@ public class KillerTransformer extends TransformerBase implements ClassFileTrans
             return classfileBuffer;
         }
         if (this.classesName.contains(clazzName)){
-            for(KillerBase killTransformer: this.killTransformers){
-                if(killTransformer.getType().equals(this.type)){
-                    newClassByte = killTransformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
-                    if(classfileBuffer != null && !newClassByte.equals(classfileBuffer)){
-                        Cache.classByteCache.put(clazzName, newClassByte);
-                        return newClassByte;
-                    }
-                    break;
-                }
+            KillerBase killTransformer = getKillerByClassName(clazzName);
+            newClassByte = killTransformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+            if(classfileBuffer != null && !newClassByte.equals(classfileBuffer)){
+                Cache.classByteCache.put(clazzName, newClassByte);
+                return newClassByte;
             }
         }
         return null;

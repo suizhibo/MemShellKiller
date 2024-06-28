@@ -32,6 +32,7 @@ public class ClassDumpTransformer extends TransformerBase implements ClassFileTr
             if (clazz.getName().equals(this.className) && !clazz.getName().startsWith("java.lang.invoke.LambdaForm")){
                 try {
                     this.instrumentation.retransformClasses(new Class[]{clazz});
+                    break;
                 } catch (Throwable throwable) {
                     throw throwable;
                 }
@@ -43,11 +44,6 @@ public class ClassDumpTransformer extends TransformerBase implements ClassFileTr
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         
         String clazzName = className.replace("/", ".");
-        byte[] newclassfileBuffer = Cache.classByteCache.get(clazzName);
-        if(newclassfileBuffer != null){
-            this.setOut(newclassfileBuffer);
-            return newclassfileBuffer;
-        }
         if (clazzName.equals(this.className)){
             this.setOut(classfileBuffer);
         }

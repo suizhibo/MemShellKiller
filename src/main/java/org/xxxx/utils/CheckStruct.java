@@ -3,9 +3,10 @@ package org.xxxx.utils;
 import java.util.HashMap;
 
 public class CheckStruct {
-    static HashMap<Integer, HashMap<String, Object>> memShells = new HashMap<Integer, HashMap<String, Object>>();
+    static HashMap<String, HashMap<String, Object>> memShells = new HashMap<String, HashMap<String, Object>>();
 
-    public static boolean set(Integer id, HashMap<String, Object> info) throws Exception {
+    public static boolean set(String className, HashMap<String, Object> info) throws Exception {
+        String id = Utils.getMD5(className);
         if (memShells.containsKey(id)){
             System.out.println(String.format("%s already exists !!!", id));
             return false;
@@ -18,8 +19,9 @@ public class CheckStruct {
         }
     }
 
-    public static Object get(Integer id, String key) {
+    public static Object get(String id, String key) {
         try{
+            id = Utils.getMD5(id);
             return memShells.get(id).get(key);
         }catch (Exception e){
             e.printStackTrace();

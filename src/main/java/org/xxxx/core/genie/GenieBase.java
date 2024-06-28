@@ -142,8 +142,8 @@ public abstract class GenieBase {
             temp += "<td>" + clazz + "</td>";
             temp += "<td>" + classloader + "</td>";
             temp += "<td>" + filepath + "</td>";
-            temp += String.format("<td><a href=\"?action=dump&id=%s\">Dump</a></td>", id);
-            temp += String.format("<td><a href=\"?action=kill&id=%s&type=%s\">Kill</a></td>", id, killType);
+            temp += String.format("<td><a href=\"?action=dump&className=%s\">Dump</a></td>", name);
+            temp += String.format("<td><a href=\"?action=kill&className=%s&type=%s\">Kill</a></td>", name, killType);
             temp = "<tr>" + temp + "</tr>";
             if(type.equals("Filter")){
                 filterHtml += temp;

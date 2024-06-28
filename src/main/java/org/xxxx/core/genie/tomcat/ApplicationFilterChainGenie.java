@@ -65,7 +65,7 @@ public class ApplicationFilterChainGenie extends GenieBase {
                     sendContext.append(Template(listener.hashCode(), null, null, listenerTName, listener.getClass().getClassLoader().getClass().getName(), listener.getClass()));
                     HashMap<String, Object> memShellInfo = CheckStruct.newMemShellInfo(null, null, listenerTName,
                             listener.getClass().getClassLoader().getClass().getName(), classFileIsExists(listener.getClass()), "Listener", "normal");
-                    CheckStruct.set(listener.hashCode(), memShellInfo);
+                    CheckStruct.set(listenerTName, memShellInfo);
                 }
             }
 
@@ -91,7 +91,7 @@ public class ApplicationFilterChainGenie extends GenieBase {
                         String filterClassLoaderName = filter.getClass().getClassLoader().getClass().getName();
                         HashMap<String, Object> memShellInfo = CheckStruct.newMemShellInfo(filterName, arrayToString(urlpatterns),
                                 filterClassName, filterClassLoaderName, classFileIsExists(filter.getClass()), "Filter", "normal");
-                        CheckStruct.set(filter.hashCode(), memShellInfo);
+                        CheckStruct.set(filterClassName, memShellInfo);
                     }
 
                 } catch (Throwable e) {
@@ -129,7 +129,7 @@ public class ApplicationFilterChainGenie extends GenieBase {
                     }
                     HashMap<String, Object> memShellInfo = CheckStruct.newMemShellInfo(servletName,
                             servletMapPath, servletClassName, servletClassLoaderName, classFileIsExists(servletClass), "Servlet", "normal");
-                    CheckStruct.set(servletClass.hashCode(), memShellInfo);
+                    CheckStruct.set(servletClassName, memShellInfo);
                 }
             }
         } catch (Exception e) {
@@ -150,13 +150,13 @@ public class ApplicationFilterChainGenie extends GenieBase {
                 String killType = "";
                 try{
                     clazz.getDeclaredMethod("transform", new Class[]{ClassLoader.class, String.class, Class.class, ProtectionDomain.class, byte[].class});
-                    killType = "transform";
+                    killType = "transformer";
                 }catch (NoSuchMethodException e){
                     killType = "agent";
                 }catch (Exception e){}
                 HashMap<String, Object> memShellInfo = CheckStruct.newMemShellInfo(clazz.getName(), "", clazz.getName(),
                         classLoaderName, classFileIsExists(clazz), "Transform", killType);
-                CheckStruct.set(clazz.hashCode(), memShellInfo);
+                CheckStruct.set(clazz.getName(), memShellInfo);
             }
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -169,13 +169,6 @@ public class ApplicationFilterChainGenie extends GenieBase {
         response.sendContent(result, true);
     }
 
-    public static void dump(int id,  HttpServletRequest request, HttpServletResponse response){
-        String className = (String) CheckStruct.get(Integer.valueOf(id), "class");
-        if(className != null && className.equals("")){
-            className = (String) CheckStruct.get(Integer.valueOf(id), "name");
-        }
-        dump(className, request, response);
-    }
 
     public static void dump(String className,  HttpServletRequest request, HttpServletResponse response){
         TransformerBase classDumpTransformer = new ClassDumpTransformer(instrumentation, className);
@@ -202,17 +195,8 @@ public class ApplicationFilterChainGenie extends GenieBase {
         }
     }
 
-    public static void kill(int id, HttpServletRequest request, HttpServletResponse response){
-        String className = (String) CheckStruct.get(Integer.valueOf(id), "class");
-        if(className != null && className.equals("")){
-            className = (String) CheckStruct.get(Integer.valueOf(id), "name");
-        }
-        String memShellType = (String) CheckStruct.get(Integer.valueOf(id), "type");
-        String type = request.getParameter("type");
-        kill(className, request, response, type, memShellType);
-    }
 
-    public static void kill(String className, HttpServletRequest request, HttpServletResponse response, String type, String subClasses){
+    public static void kill(String className, HttpServletRequest request, HttpServletResponse response){
         TransformerBase killerTransformer;
 //        // first skill all transformer
 //        TransformerBase killerTransformer = new KillerTransformer(instrumentation, "", "transformer", subClasses);
@@ -225,7 +209,7 @@ public class ApplicationFilterChainGenie extends GenieBase {
 //        }
 
 
-        killerTransformer = new KillerTransformer(instrumentation, className, type, subClasses);
+        killerTransformer = new KillerTransformer(instrumentation, className);
         try{
             killerTransformer.retransform();
         }catch (Throwable throwable) {
@@ -249,19 +233,19 @@ public class ApplicationFilterChainGenie extends GenieBase {
         String action = req.getParameter("action");
         if (action != null) {
             try {
-                String id = req.getParameter("id");
+                String className = req.getParameter("className");
                 if (action.equalsIgnoreCase("scan")) {
                     if (context == null) {
                         context = Reflections.getField((Reflections.getField(Reflections.getField(req.getRequest(), "request"), "mappingData")), "context");
                     }
                     scan(context, req, resp);
                 }else if(action.equalsIgnoreCase("dump")){
-                    if (id != null && id.length() > 0){
-                        dump(Integer.valueOf(id), req, resp);
+                    if (className != null && className.length() > 0){
+                        dump(className, req, resp);
                     }
                 }else if (action.equalsIgnoreCase("kill")){
-                    if (id != null && id.length() > 0){
-                        kill(Integer.valueOf(id), req, resp);
+                    if (className != null && className.length() > 0){
+                        kill(className, req, resp);
                     }
                 }
             } catch (Exception e) {

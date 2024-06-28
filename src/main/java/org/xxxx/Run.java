@@ -30,7 +30,7 @@ public class Run {
                     Method attach = MyVirtualMachine.getDeclaredMethod("attach", new Class[]{MyVirtualMachineDescriptor});
                     Object machine = attach.invoke(MyVirtualMachine, new Object[]{o});
                     Method loadAgent = machine.getClass().getSuperclass().getSuperclass().getDeclaredMethod("loadAgent", new Class[]{String.class, String.class});
-                    loadAgent.invoke(machine, new Object[]{agentPath, "install,D:\\Users\\tomcat_server.properties"});
+                    loadAgent.invoke(machine, new Object[]{agentPath, "install,D:\\tomcat_server.properties"});
                     Method detach = MyVirtualMachine.getDeclaredMethod("detach", new Class[0]);
                     detach.invoke(machine, new Object[0]);
                     break;
