@@ -55,12 +55,12 @@ public class KillerTransformer extends TransformerBase implements ClassFileTrans
         Class[] arr = loadedClasses;
         int len = loadedClasses.length;
         Set<Class> classSet = new HashSet<Class>();
-        // 最近一次的transformer扫描结果不为空且第一次执行kill
+        // TODO：最近一次的transformer扫描结果不为空且第一次执行kill
         // 旨在禁用该工具之前所有的transformer
-        if(!Cache.lastTransformers.isEmpty() && !isFirst){
-            classSet.addAll(Cache.lastTransformers);
-            isFirst = true;
-        }
+//        if(!Cache.lastTransformers.isEmpty() && !isFirst){
+//            classSet.addAll(Cache.lastTransformers);
+//            isFirst = true;
+//        }
         for (int i$ = 0; i$ < len; ++i$) {
             Class clazz = arr[i$];
             String clazzName = clazz.getName();

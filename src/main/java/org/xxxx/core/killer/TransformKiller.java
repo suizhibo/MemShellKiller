@@ -25,7 +25,8 @@ public class TransformKiller extends KillerBase {
             // 以下包括两种kill transform的方法
 //            String methodSrc = "String clazzName = $2.replace(\"/\", \".\"); byte[] newClassfileBuffer = (byte[])org.xxxx.utils.Cache.classByteCache.get(clazzName); if(newClassfileBuffer != null){return newClassfileBuffer; }";
 //            new JavassistUtil().insertBefore(ctClass, "transform", (String)null, methodSrc);
-            String methodSrc = "{String clazzName = $2.replace(\"/\", \".\"); byte[] newClassfileBuffer = (byte[])org.xxxx.utils.Cache.classByteCache.get(clazzName); if(newClassfileBuffer != null){return newClassfileBuffer; }return null;}";
+//            String methodSrc = "{String clazzName = $2.replace(\"/\", \".\"); byte[] newClassfileBuffer = (byte[])org.xxxx.utils.Cache.classByteCache.get(clazzName); if(newClassfileBuffer != null){return newClassfileBuffer; }return null;}";
+            String methodSrc = "{return null;}";
             new JavassistUtil().setBody(ctClass, "transform", (String)null, methodSrc);
             classfileBuffer = ctClass.toBytecode();
             return classfileBuffer;

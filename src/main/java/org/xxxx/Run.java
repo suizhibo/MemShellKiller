@@ -1,6 +1,8 @@
 package org.xxxx;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
@@ -9,6 +11,8 @@ public class Run {
         if (args.length == 0)
             return;
         String agentPath = args[0];
+        String action = args[1];
+        String propertiesPath = args[2];
 //        System.out.print(agentPath);
         try {
 //            File toolsJar = new File(System.getProperty("java.home").replaceFirst("jre", "lib") + File.separator + "tools.jar");
@@ -30,7 +34,7 @@ public class Run {
                     Method attach = MyVirtualMachine.getDeclaredMethod("attach", new Class[]{MyVirtualMachineDescriptor});
                     Object machine = attach.invoke(MyVirtualMachine, new Object[]{o});
                     Method loadAgent = machine.getClass().getSuperclass().getSuperclass().getDeclaredMethod("loadAgent", new Class[]{String.class, String.class});
-                    loadAgent.invoke(machine, new Object[]{agentPath, "release,D:\\tomcat_server.properties"});
+                    loadAgent.invoke(machine, new Object[]{agentPath, String.format("%s,%s", new Object[]{action, propertiesPath})});
                     Method detach = MyVirtualMachine.getDeclaredMethod("detach", new Class[0]);
                     detach.invoke(machine, new Object[0]);
                     break;
