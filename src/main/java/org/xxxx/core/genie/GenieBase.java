@@ -4,7 +4,9 @@ import org.xxxx.agent.Config;
 import org.xxxx.javassist.*;
 import org.xxxx.utils.CheckStruct;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
 import java.net.URL;
 import java.util.HashMap;
@@ -159,5 +161,4 @@ public abstract class GenieBase {
         return Config.scanResultTemplate.replace("{filter}", filterHtml)
                 .replace("{listener}", listenerHtml).replace("{servlet}", servletHtml).replace("{transformer}", transformBlackHtml);
     }
-
 }

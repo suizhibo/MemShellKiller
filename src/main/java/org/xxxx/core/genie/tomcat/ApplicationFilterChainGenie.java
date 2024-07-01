@@ -48,7 +48,7 @@ public class ApplicationFilterChainGenie extends GenieBase {
         return filterArray;
     }
 
-    public static void scan(Object context, HttpServletRequest request, HttpServletResponse response) {
+    public static void scan(Object context, HttpServletRequest request, HttpServletResponse response) throws UnmodifiableClassException, ClassNotFoundException {
         StringBuffer sendContext = new StringBuffer();
         try {
             List<Object> listeners = (List<Object>) Reflections.getField(context, "applicationEventListenersList");
@@ -170,7 +170,7 @@ public class ApplicationFilterChainGenie extends GenieBase {
     }
 
 
-    public static void dump(String className,  HttpServletRequest request, HttpServletResponse response){
+    public static void dump(String className,  HttpServletRequest request, HttpServletResponse response) throws UnmodifiableClassException, ClassNotFoundException {
         TransformerBase classDumpTransformer = new ClassDumpTransformer(instrumentation, className);
         try {
             classDumpTransformer.retransform();
@@ -196,7 +196,7 @@ public class ApplicationFilterChainGenie extends GenieBase {
     }
 
 
-    public static void kill(String className, HttpServletRequest request, HttpServletResponse response){
+    public static void kill(String className, HttpServletRequest request, HttpServletResponse response) throws UnmodifiableClassException, ClassNotFoundException {
         TransformerBase killerTransformer;
 //        // first skill all transformer
 //        TransformerBase killerTransformer = new KillerTransformer(instrumentation, "", "transformer", subClasses);

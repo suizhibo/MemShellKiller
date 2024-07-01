@@ -4,3 +4,4 @@ Premain-Class: org.xxxx.agent.Agent
 Created-By: xxxx 4.2.1
 Main-Class: org.xxxx.agent.Agent
 Can-Retransform-Classes: true
+Can-Redefine-Classes: true
