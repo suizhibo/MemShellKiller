@@ -1,6 +1,6 @@
 # 简介
 
-本工具采用Java Agent技术实现内存马的查杀，目前支持Servlet/Filter/Listener/Agent内存马，以及实现了ClassFileTransformer接口的类transform查杀。
+本工具采用Java Agent技术实现内存马的查杀，目前支持Tomcat（Servlet/Filter/Listener）和Agent内存马，以及实现了ClassFileTransformer接口的类transform查杀。
 当前仅实现了Tomcat中间件的Genie。
 # 目录结构
 ```text
